@@ -8,7 +8,9 @@
 
             for (int i = 1; i <= 5; i++)
             {
-                actions.Add(() => Console.WriteLine(i));
+                int value = i;
+
+                actions.Add(() => Console.WriteLine(value));
             }
             foreach (var action in actions)
             {
