@@ -2,32 +2,31 @@
 
 namespace lab8
 {
-    public class  BankTerminal
-    {
-        public event Action<int> OnMoneyWithdraw;
-
-        public void Withdraw(int amount)
-        {
-            Console.WriteLine($"[Термінал]Виконую операцію: зняття {amount} грн.");
-
-            OnMoneyWithdraw?.Invoke(amount);
-        }
-
-    }
     internal class Program
     {
         static void Main(string[] args)
         {
-            BankTerminal terminal = new BankTerminal();
+           
+            double initialPrice = 1000;
 
-            terminal.OnMoneyWithdraw += (sum) => Console.WriteLine($"[СМС] З вашого рахунку знято {sum} грн.");
-            terminal.Withdraw(100);
+            
+            Func<double, double> discountCalculator = (price) => price * 0.95;
+            discountCalculator += (price) => price * 0.90;
+            discountCalculator += (price) => price - 100;
 
-            //terminal.OnMoneyWithdraw = null;
+            
+            double currentPrice = initialPrice;
 
-            //terminal.OnMoneyWithdraw?.Invoke(1000000);
+            
+            foreach (var method in discountCalculator.GetInvocationList())
+            {
+               
+                var func = (Func<double, double>)method;
+                currentPrice = func(currentPrice); 
+            }
 
-            Console.WriteLine("Злом завершено. Система сповіщень не працює або бреше.");
+            Console.WriteLine($"Початкова ціна: {initialPrice}");
+            Console.WriteLine($"Ціна після всіх знижок: {currentPrice}");
         }
 
     }
